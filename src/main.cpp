@@ -26,9 +26,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
     bool isFullscreen = glfwGetWindowMonitor(window) != NULL;
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && isFullscreen)
-        glfwSetWindowMonitor(window, NULL, 0, 50, 1920, 1080, 60);
+        glfwSetWindowMonitor(window, NULL, 0, 50, 1920, 1080, GLFW_REFRESH_RATE);
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && !isFullscreen)
-        glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, 1920, 1080, 60);
+        glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, 1920, 1080, GLFW_REFRESH_RATE);
 }
 
 void processInput(GLFWwindow* window, GLFWmonitor* monitor)
