@@ -22,7 +22,16 @@ const char* fragmentShaderSource = R"(
     }
 )";
 
-void processInput(GLFWwindow* window)
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    bool isFullscreen = glfwGetWindowMonitor(window) != NULL;
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && isFullscreen)
+        glfwSetWindowMonitor(window, NULL, 0, 50, 1920, 1080, 60);
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && !isFullscreen)
+        glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, 1920, 1080, 60);
+}
+
+void processInput(GLFWwindow* window, GLFWmonitor* monitor)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
@@ -32,6 +41,8 @@ void processInput(GLFWwindow* window)
         glClearColor(0.0f, 1.0f, 0.0f, 1.0f); // Change clear color to green
     if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
         glClearColor(0.0f, 0.0f, 1.0f, 1.0f); // Change clear color to blue
+
+
 }
 
 int main()
@@ -44,8 +55,9 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
     // Create a GLFW window
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Spinning Triangle", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(1920, 1080, "Holy moly", monitor, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -112,7 +124,8 @@ int main()
     while (!glfwWindowShouldClose(window))
     {
         // Process user input
-        processInput(window);
+        processInput(window, monitor);
+        glfwSetKeyCallback(window, key_callback);
 
         // Clear the screen
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
