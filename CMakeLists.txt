@@ -17,6 +17,6 @@ if (WIN32)
 endif(WIN32)
 
 if (UNIX)
-    target_link_libraries(main -lglfw32)
+    target_link_libraries(main -lglfw3)
 endif (UNIX)
 target_include_directories(main PRIVATE include/)
