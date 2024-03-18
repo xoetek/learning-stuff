@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.11-3.18)
 project(
         main
         VERSION 1.0
-        DESCRIPTION "A simple project to test cmake")
+        DESCRIPTION "Build main")
 
 set(SOURCES src/main.cpp src/glad.c src/square.cpp) 
 
