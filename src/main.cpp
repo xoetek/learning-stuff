@@ -6,31 +6,50 @@
 const char* vertexShaderSource = R"(
     #version 330 core
     layout (location = 0) in vec3 aPos;
+    out vec4 vertexColor;
     void main()
     {
         gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+        vertexColor = vec4(0.5, 0.0, 0.0, 1.0);
     }
 )";
 
 // Fragment Shader
 const char* fragmentShaderSource = R"(
     #version 330 core
+    in vec4 vertexColor;
     out vec4 FragColor;
     void main()
     {
-        FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+
+        FragColor = vertexColor;
     }
 )";
 
+int getRefreshRate(GLFWmonitor* monitor)
+{
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+    return mode->refreshRate;
+}
+int getScreenWidth(GLFWmonitor* monitor)
+{
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+    return mode->width;
+}
+int getScreenHeight(GLFWmonitor* monitor)
+{
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+    return mode->height;
+}
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     bool isFullscreen = glfwGetWindowMonitor(window) != NULL;
+    GLFWmonitor* monitor  = glfwGetPrimaryMonitor();
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && isFullscreen)
-        glfwSetWindowMonitor(window, NULL, 0, 50, 1920, 1080, GLFW_REFRESH_RATE);
+        glfwSetWindowMonitor(window, NULL, 0, 50, getScreenWidth(monitor), getScreenHeight(monitor), getRefreshRate(monitor));
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && !isFullscreen)
-        glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, 1920, 1080, GLFW_REFRESH_RATE);
+        glfwSetWindowMonitor(window, monitor, 0, 0, getScreenWidth(monitor), getScreenHeight(monitor), getRefreshRate(monitor));
 }
-
 void processInput(GLFWwindow* window, GLFWmonitor* monitor)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -41,8 +60,6 @@ void processInput(GLFWwindow* window, GLFWmonitor* monitor)
         glClearColor(0.0f, 1.0f, 0.0f, 1.0f); // Change clear color to green
     if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
         glClearColor(0.0f, 0.0f, 1.0f, 1.0f); // Change clear color to blue
-
-
 }
 
 int main()
@@ -57,7 +74,8 @@ int main()
 
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
     // Create a GLFW window
-    GLFWwindow* window = glfwCreateWindow(1920, 1080, "Holy moly", monitor, NULL);
+    GLFWwindow* window = glfwCreateWindow(getScreenWidth(monitor), getScreenWidth(monitor), "Holy moly", NULL, NULL);
+    glfwSetWindowMonitor(window, monitor, 0, 0, getScreenWidth(monitor), getScreenHeight(monitor), getRefreshRate(monitor));
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
