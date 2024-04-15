@@ -6,23 +6,23 @@
 const char* vertexShaderSource = R"(
     #version 330 core
     layout (location = 0) in vec3 aPos;
-    out vec4 vertexColor;
+    layout (location = 1) in vec3 aColor;
+    out vec3 ourColor;
     void main()
     {
-        gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-        vertexColor = vec4(0.5, 0.0, 0.0, 1.0);
+        gl_Position = vec4(aPos, 1.0);
+        ourColor = aColor;
     }
 )";
 
 // Fragment Shader
 const char* fragmentShaderSource = R"(
     #version 330 core
-    in vec4 vertexColor;
     out vec4 FragColor;
+    in vec3 ourColor;
     void main()
     {
-
-        FragColor = vertexColor;
+        FragColor = vec4(ourColor, 1.0f);
     }
 )";
 
@@ -116,9 +116,9 @@ int main()
 
     // Define vertices of the triangle
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
+         0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+         0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f
     };
 
     // Create vertex buffer object (VBO) and vertex array object (VAO)
@@ -130,27 +130,26 @@ int main()
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
+    
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glUseProgram(shaderProgram);
     // Enable depth testing
     glEnable(GL_DEPTH_TEST);
-
     // Render loop
     while (!glfwWindowShouldClose(window))
     {
         // Process user input
         processInput(window, monitor);
         glfwSetKeyCallback(window, key_callback);
-
         // Clear the screen
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Use shader program
-        glUseProgram(shaderProgram);
 
+        
         // Bind VAO
         glBindVertexArray(VAO);
 
@@ -163,6 +162,7 @@ int main()
         // Swap buffers and poll events
         glfwSwapBuffers(window);
         glfwPollEvents();
+        
     }
 
     // Delete VAO and VBO
