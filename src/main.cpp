@@ -1,29 +1,16 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <shader.h>
 #include <iostream>
 
 // Vertex Shader
 const char* vertexShaderSource = R"(
-    #version 330 core
-    layout (location = 0) in vec3 aPos;
-    layout (location = 1) in vec3 aColor;
-    out vec3 ourColor;
-    void main()
-    {
-        gl_Position = vec4(aPos, 1.0);
-        ourColor = aColor;
-    }
+
 )";
 
 // Fragment Shader
 const char* fragmentShaderSource = R"(
-    #version 330 core
-    out vec4 FragColor;
-    in vec3 ourColor;
-    void main()
-    {
-        FragColor = vec4(ourColor, 1.0f);
-    }
+
 )";
 
 int getRefreshRate(GLFWmonitor* monitor)
@@ -91,28 +78,7 @@ int main()
         return -1;
     }
 
-    // Create vertex shader
-    unsigned int vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
 
-    // Create fragment shader
-    unsigned int fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-
-    // Create shader program
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    // Delete shaders
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
 
     // Define vertices of the triangle
     float vertices[] = {
@@ -135,12 +101,14 @@ int main()
     
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    glUseProgram(shaderProgram);
+    Shader shader("D:/Goodies/C++/learning-stuff/shaders/vShader.vs", "D:/Goodies/C++/learning-stuff/shaders/fShader.fs");
+    shader.use();
     // Enable depth testing
     glEnable(GL_DEPTH_TEST);
     // Render loop
     while (!glfwWindowShouldClose(window))
     {
+
         // Process user input
         processInput(window, monitor);
         glfwSetKeyCallback(window, key_callback);
