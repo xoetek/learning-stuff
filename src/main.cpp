@@ -4,15 +4,6 @@
 #include <iostream>
 
 // Vertex Shader
-const char* vertexShaderSource = R"(
-
-)";
-
-// Fragment Shader
-const char* fragmentShaderSource = R"(
-
-)";
-
 int getRefreshRate(GLFWmonitor* monitor)
 {
     const GLFWvidmode* mode = glfwGetVideoMode(monitor);
@@ -102,13 +93,17 @@ int main()
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
     Shader shader("D:/Goodies/C++/learning-stuff/shaders/vShader.vs", "D:/Goodies/C++/learning-stuff/shaders/fShader.fs");
-    shader.use();
+    
     // Enable depth testing
     glEnable(GL_DEPTH_TEST);
     // Render loop
+    float val = 0.0f;
     while (!glfwWindowShouldClose(window))
     {
-
+        
+        val = (cos(glfwGetTime())/2.0);
+        shader.use();
+        shader.setFloat("xOffset", val);
         // Process user input
         processInput(window, monitor);
         glfwSetKeyCallback(window, key_callback);
