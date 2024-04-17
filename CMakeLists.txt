@@ -6,7 +6,7 @@ project(
         VERSION 1.0
         DESCRIPTION "Build main")
 
-set(SOURCES src/main.cpp src/glad.c src/square.cpp src/shader.cpp) 
+set(SOURCES src/main.cpp src/glad.c src/square.cpp src/shader.cpp src/stb_image.cpp) 
 
 add_executable(main ${SOURCES})
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
