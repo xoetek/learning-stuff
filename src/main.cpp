@@ -73,14 +73,6 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    // float vertices[] = {
-    //     //pos                //color            //texture
-    //      0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,
-    //      0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f,
-    //     -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
-    //     -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f
-    // };
-
 float vertices[] = {
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
      0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
@@ -124,40 +116,37 @@ float vertices[] = {
     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 };
-    // unsigned int indices[] = {
-    //     0, 1, 3,
-    //     1, 2, 3
-    // };
-    // Create vertex buffer object (VBO) and vertex array object (VAO)
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    // glGenBuffers(1, &EBO);
 
     // Bind VAO and VBO
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-
-    // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    // glEnableVertexAttribArray(1);
 
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
+    std::string binPath = argv[0];
+    binPath.erase(binPath.end()-12, binPath.end());
 
-    Shader shader("D:/Goodies/C++/learning-stuff/shaders/vShader.vs", "D:/Goodies/C++/learning-stuff/shaders/fShader.fs");
+    std::string vsPath = binPath + std::string("shaders/vShader.vs");
+    std::string fsPath = binPath + std::string("shaders/fShader.fs");
+
+    std::string texturePath = binPath + std::string("textures/nah_id_win.jpg");
+    std::string texturePath2 = binPath + std::string("textures/jkm.jpg");
+
+    Shader shader(vsPath.c_str(), fsPath.c_str());
+
     int width, height, nrChannels;
     unsigned int texture1, texture2;
-    stbi_set_flip_vertically_on_load(true);  
-    unsigned char *data = stbi_load("D:/Goodies/C++/learning-stuff/textures/nah_id_win.jpg", &width, &height, &nrChannels, 0);
+    stbi_set_flip_vertically_on_load(true);
+    
+    unsigned char *data = stbi_load(texturePath.c_str(), &width, &height, &nrChannels, 0);
     glGenTextures(1, &texture1);
     glBindTexture(GL_TEXTURE_2D, texture1);
 
@@ -184,7 +173,7 @@ float vertices[] = {
     glBindTexture(GL_TEXTURE_2D, texture2);
 
 
-    data = stbi_load("D:/Goodies/C++/learning-stuff/textures/jkm.jpg", &width, &height, &nrChannels, 0);
+    data = stbi_load(texturePath2.c_str(), &width, &height, &nrChannels, 0);
     if (data == NULL)
     {
         std::cout << "Failed to load texture" << std::endl;
