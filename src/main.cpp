@@ -132,14 +132,16 @@ float vertices[] = {
     glEnableVertexAttribArray(1);
 
     std::string binPath = argv[0];
-    binPath.erase(binPath.end()-12, binPath.end());
+    int ps = binPath.find_last_of("/");
+    binPath.erase(binPath.begin()+ps, binPath.end());
 
-    std::string vsPath = binPath + std::string("shaders/vShader.vs");
-    std::string fsPath = binPath + std::string("shaders/fShader.fs");
+    std::string vsPath = binPath + std::string("/../shaders/vShader.vs");
+    std::string fsPath = binPath + std::string("/../shaders/fShader.fs");
 
-    std::string texturePath = binPath + std::string("textures/nah_id_win.jpg");
-    std::string texturePath2 = binPath + std::string("textures/jkm.jpg");
+    std::string texturePath = binPath + std::string("/../textures/nah_id_win.jpg");
+    std::string texturePath2 = binPath + std::string("/../textures/jkm.jpg");
 
+    std::cout << texturePath2;
     Shader shader(vsPath.c_str(), fsPath.c_str());
 
     int width, height, nrChannels;
