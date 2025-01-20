@@ -1,2 +1,3 @@
 # OpenGL
-To build just use CMake in the root directory of the project.
+## Building:
+Use CMake with CMakeLists.txt to generate build system.
