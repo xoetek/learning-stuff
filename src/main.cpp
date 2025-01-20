@@ -132,7 +132,11 @@ float vertices[] = {
     glEnableVertexAttribArray(1);
 
     std::string binPath = argv[0];
+    #if defined(__linux__)
     int ps = binPath.find_last_of("/");
+    #elif _WIN32
+    int ps = binPath.find_last_of("\\");
+    #endif
     binPath.erase(binPath.begin()+ps, binPath.end());
 
     std::string vsPath = binPath + std::string("/../shaders/vShader.vs");
